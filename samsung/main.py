@@ -37,7 +37,7 @@ h = cross_img.shape[0]
 # cv2.waitKey()
 # cv2.destroyAllWindows()
 
-threshold = .20
+threshold = .10
 
 yloc, xloc = np.where(result >= threshold)
 
