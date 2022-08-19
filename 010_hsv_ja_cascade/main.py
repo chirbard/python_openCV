@@ -38,15 +38,15 @@ while (True):
 
     # # do object detection
     # rectangles = cross.detectMultiScale(screenshot)
-    # rectangles = cross.detectMultiScale(output_image)
+    rectangles = cross.detectMultiScale(output_image)
 
     # # draw the detection results onto the original image
-    # detection_image = vision_cross.draw_rectangles(screenshot, rectangles)
-    # detection_image = vision_cross.draw_rectangles(screenshot, rectangles)
+    detection_image = vision_cross.draw_rectangles(screenshot, rectangles)
+    # detection_image = vision_cross.draw_rectangles(output_image, rectangles)
 
     # # display the images
-    # cv.imshow('Matches', detection_image)
-    cv.imshow('Matches', output_image)
+    cv.imshow('Matches', detection_image)
+    # cv.imshow('Matches', output_image)
 
     # debug the loop rate
     print('FPS {}'.format(1 / (time() - loop_time)))
