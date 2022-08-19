@@ -19,13 +19,14 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # initialize the WindowCapture class
 wincap = WindowCapture('Nexus 6P')
-# initialize the Vision class
-vision_limestone = Vision('cross_processed.jpg')
-# initialize the trackbar window
-vision_limestone.init_control_gui()
 
-# limestone HSV filter
-# hsv_filter = HsvFilter(0, 22, 0, 27, 255, 255, 0, 0, 0, 0)
+# load trained model
+cross = cv.CascadeClassifier('cascade/cascade.xml')
+# load an empty Vision class
+vision_cross = Vision(None)
+
+# cross HSV filter
+hsv_filter = HsvFilter(0, 255, 0, 179, 255, 255, 143, 0, 255, 0)
 
 loop_time = time()
 while (True):
@@ -33,18 +34,18 @@ while (True):
     # get an updated image of the game
     screenshot = wincap.get_screenshot()
 
-    # pre-process the image
-    processed_image = vision_limestone.apply_hsv_filter(screenshot)
-    # output_image = vision_limestone.apply_hsv_filter(screenshot, hsv_filter)
+    output_image = vision_cross.apply_hsv_filter(screenshot, hsv_filter)
 
-    # do object detection
-    rectangles = vision_limestone.find(processed_image, 0.46)
+    # # do object detection
+    # rectangles = cross.detectMultiScale(screenshot)
+    # rectangles = cross.detectMultiScale(output_image)
 
-    # draw the detection results onto the original image
-    output_image = vision_limestone.draw_rectangles(screenshot, rectangles)
+    # # draw the detection results onto the original image
+    # detection_image = vision_cross.draw_rectangles(screenshot, rectangles)
+    # detection_image = vision_cross.draw_rectangles(screenshot, rectangles)
 
-    # display the processed image
-    cv.imshow('Processed', processed_image)
+    # # display the images
+    # cv.imshow('Matches', detection_image)
     cv.imshow('Matches', output_image)
 
     # debug the loop rate
@@ -53,8 +54,14 @@ while (True):
 
     # press 'q' with the output window focused to exit.
     # waits 1 ms every loop to process key presses
-    if cv.waitKey(1) == ord('q'):
+    key = cv.waitKey(1)
+    if key == ord('q'):
         cv.destroyAllWindows()
         break
+    elif key == ord('f'):
+        cv.imwrite('positive/{}.jpg'.format(loop_time), output_image)
+    elif key == ord('d'):
+        cv.imwrite('negative/{}.jpg'.format(loop_time), output_image)
+
 
 print('Done.')
